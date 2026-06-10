@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        timestamps()
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -13,6 +17,12 @@ pipeline {
                 sh 'chmod +x mvnw || true'
                 sh './mvnw -B -ntp clean test'
             }
+        }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
         }
     }
 }
